@@ -77,7 +77,24 @@ function createAction() {
   return fragment;
 }
 
+function setCSSGlobalVariable(key, value) {
+  document.documentElement.style.setProperty([`--${key}`], value);
+}
+
 function render() {
+  const columns = 2;
+  const gutter = '8px';
+
+  setCSSGlobalVariable("columns", columns);
+  setCSSGlobalVariable("gutter", gutter);
+
+  const columnEls = [];
+  for (let i = 0; i < columns; i++) {
+    const columnEl = document.createElement("div");
+    columnEl.classList.add("column");
+    columnEls.push(columnEl);
+  }
+
   const fragment = document.createDocumentFragment();
   let currentIdx = 0;
 
@@ -91,16 +108,10 @@ function render() {
     itemEl.append(titleEl);
 
     if ("cover" in item) {
-      const coverWrapEl = document.createElement("div");
-      coverWrapEl.classList.add("cover-wrap");
-
       const coverEl = document.createElement("img");
       coverEl.classList.add("cover");
       coverEl.src = item.cover;
-
-      coverWrapEl.append(coverEl);
-
-      itemEl.append(coverWrapEl);
+      itemEl.append(coverEl);
     }
 
     const contentEl = document.createElement("div");
@@ -113,70 +124,16 @@ function render() {
     actionsEl.append(createAction());
     itemEl.append(actionsEl);
 
-    fragment.append(itemEl);
+    if (currentIdx === columnEls.length) {
+      currentIdx = 0;
+    }
+    columnEls[currentIdx++].append(itemEl);
   });
+
+  fragment.append(...columnEls);
 
   const containerEl = document.querySelector(".container");
   containerEl.append(fragment);
 }
 
-function scrollTo(y) {
-  const framePx = 128
-  const frameCb = () => {
-    const fromYDistance =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    const direction = fromYDistance > y ? "top" : "bottom";
-    if (Math.abs(fromYDistance - y) >= framePx) {
-      window.requestAnimationFrame(frameCb);
-      document.scrollingElement.scrollTop =
-        direction === "top" ? fromYDistance - framePx / 2 : fromYDistance + framePx / 2;
-      return;
-    }
-    document.scrollingElement.scrollTop = y;
-  };
-
-  frameCb();
-
-  // setTimeout(() => (document.scrollingElement.scrollTop = y), 0);
-}
-
-function touchListener() {
-  let currentIdx = 0;
-  const responseTime = 300; // 最快响应时间
-  document.addEventListener("touchstart", (startEvent) => {
-    let startY = startEvent.touches[0].clientY;
-    let startTime = Date.now();
-
-    const handleEnd = (endEvent) => {
-      let endY = endEvent.changedTouches[0].clientY;
-      let endTime = Date.now();
-
-      const direction = endY > startY ? "top" : "bottom"; // 方向
-      const { innerHeight } = window;
-      const canSwitch = Math.abs(endY - startY) > innerHeight / 2; // 是否到达切换阀值
-
-      startY = 0;
-      endY = 0;
-      startTime = 0;
-      endTime = 0;
-
-      const inResponseTime = endTime - startTime < responseTime;
-
-      if (inResponseTime || canSwitch) {
-        if (direction === "top") {
-          if (currentIdx === 0) scrollTo(currentIdx * innerHeight);
-          else scrollTo(--currentIdx * innerHeight);
-        }
-        if (direction === "bottom") scrollTo(++currentIdx * innerHeight);
-      }
-      if (!inResponseTime) if (!canSwitch) scrollTo(currentIdx * innerHeight);
-
-      document.removeEventListener("touchend", handleEnd);
-    };
-
-    document.addEventListener("touchend", handleEnd);
-  });
-}
-
 render();
-touchListener();

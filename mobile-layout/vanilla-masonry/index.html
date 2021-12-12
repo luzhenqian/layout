@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>images</title>
+  </head>
+  <body>
+    <div class="container">
+      <img src="https://picsum.photos/100/460?radom=1" alt />
+      <img src="https://picsum.photos/500/860?radom=1" alt />
+      <img src="https://picsum.photos/300/120?radom=1" alt />
+      <img src="https://picsum.photos/320/360?radom=1" alt />
+      <img src="https://picsum.photos/340/160?radom=1" alt />
+      <img src="https://picsum.photos/940/280?radom=1" alt />
+      <img src="https://picsum.photos/120/330?radom=1" alt />
+      <img src="https://picsum.photos/440/790?radom=1" alt />
+      <img src="https://picsum.photos/550/120?radom=1" alt />
+      <img src="https://picsum.photos/670/1800?radom=1" alt />
+      <img src="https://picsum.photos/720/440?radom=1" alt />
+      <img src="https://picsum.photos/330/800?radom=1" alt />
+      <img src="https://picsum.photos/260/970?radom=1" alt />
+      <img src="https://picsum.photos/560/220?radom=1" alt />
+      <img src="https://picsum.photos/860/291?radom=1" alt />
+    </div>
+
+    <script src="./index.js"></script>
+    <script>
+      // 使用方式
+      const masonry = new Masonry({
+        selector: ".container",
+        columns: 3,
+        gutter: 16,
+      });
+
+      setTimeout(() => {
+        masonry.layout();
+      }, 15000);
+    </script>
+  </body>
+</html>

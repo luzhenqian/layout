@@ -1,0 +1,16 @@
+.container {
+  width: 600px;
+  height: 1200px;
+  margin: auto;
+  background-color: #000;
+  font-size: 48px;
+  color: #fff;
+}
+
+.login-btn{
+  padding: 13px 28px;
+  border: 1px solid #cccccc;
+  border-radius: 0;
+  color: #000;
+    line-height: 1.5;
+}
